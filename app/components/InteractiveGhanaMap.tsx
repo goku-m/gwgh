@@ -6,7 +6,8 @@ import { regions } from "../data/regions";
 const MAP_WIDTH = 1077;
 const MAP_HEIGHT = 1460;
 function formatMetric(value: number, suffix = "") {
-  return `${value.toLocaleString("en-US")}${suffix}`;
+  const plus = value === 0 ? "" : "+";
+  return `${value.toLocaleString("en-US")}${plus}${suffix}`;
 }
 
 type RegionLookup = {

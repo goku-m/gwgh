@@ -6,17 +6,19 @@ import { regionalImpactTotals } from "../data/regions";
 
 const metrics = [
   {
-    value: regionalImpactTotals.treesPlanted.toLocaleString("en-US"),
+    value: `${regionalImpactTotals.treesPlanted.toLocaleString("en-US")}+`,
     label: "Trees planted",
   },
   {
     value: `${regionalImpactTotals.cropsCultivated.toLocaleString(
       "en-US"
-    )} acres`,
+    )}+ acres`,
     label: "Crops cultivated",
   },
   {
-    value: regionalImpactTotals.communitiesImpacted.toLocaleString("en-US"),
+    value: `${regionalImpactTotals.communitiesImpacted.toLocaleString(
+      "en-US"
+    )}+`,
     label: "Communities impacted",
   },
 ];

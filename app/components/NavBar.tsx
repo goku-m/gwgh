@@ -9,6 +9,7 @@ const links = [
   { href: "/", label: "Home" },
   { href: "/who-we-are", label: "Who We Are" },
   { href: "/what-we-do", label: "What We Do" },
+  { href: "/impact", label: "Our Impact" },
   { href: "/gallery", label: "Gallery" },
   { href: "/contact-us", label: "Contact" },
 ];
@@ -83,11 +84,10 @@ export default function NavBar() {
                     href={link.href}
                     aria-current={active ? "page" : undefined}
                     onClick={() => setIsOpen(false)}
-                    className={`block rounded-lg px-4 py-2.5 text-sm ${
-                      active
-                        ? "bg-lime-700 text-white md:bg-lime-50 md:text-lime-800"
-                        : "text-gray-600 hover:bg-white hover:text-lime-800 md:hover:bg-lime-50"
-                    }`}
+                    className={`block rounded-lg px-4 py-2.5 text-sm ${active
+                      ? "bg-lime-700 text-white md:bg-lime-50 md:text-lime-800"
+                      : "text-gray-600 hover:bg-white hover:text-lime-800 md:hover:bg-lime-50"
+                      }`}
                   >
                     {link.label}
                   </Link>

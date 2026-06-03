@@ -11,7 +11,7 @@ const SocialProof = () => {
         <dl className="mx-auto grid max-w-screen-lg gap-8 text-white sm:grid-cols-3">
           <div className="flex flex-col items-center justify-center">
             <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
-              {regionalImpactTotals.treesPlanted.toLocaleString("en-US")}
+              {regionalImpactTotals.treesPlanted.toLocaleString("en-US")}+
             </dt>
             <dd className="text-base font-medium text-lime-200">
               Trees Planted
@@ -19,7 +19,7 @@ const SocialProof = () => {
           </div>
           <div className="flex flex-col items-center justify-center">
             <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
-              {regionalImpactTotals.cropsCultivated.toLocaleString("en-US")}{" "}
+              {regionalImpactTotals.cropsCultivated.toLocaleString("en-US")}+{" "}
               Acres
             </dt>
             <dd className="text-base font-medium text-lime-200">
@@ -28,7 +28,7 @@ const SocialProof = () => {
           </div>
           <div className="flex flex-col items-center justify-center">
             <dt className="mb-2 text-3xl md:text-4xl font-extrabold">
-              {regionalImpactTotals.communitiesImpacted.toLocaleString("en-US")}
+              {regionalImpactTotals.communitiesImpacted.toLocaleString("en-US")}+
             </dt>
             <dd className="text-base font-medium text-lime-200">
               Communities Impacted
