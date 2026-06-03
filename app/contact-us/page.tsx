@@ -19,12 +19,30 @@ export default function ContactPage() {
               Have a question, partnership idea, or enquiry? We would be glad to
               hear from you.
             </p>
-            <a
-              href="mailto:info@greenworldgh.com"
-              className="mt-6 inline-block font-semibold text-lime-800 hover:text-lime-950"
-            >
-              info@greenworldgh.com
-            </a>
+            <dl className="mt-6 space-y-4">
+              <div>
+                <dt className="text-sm font-semibold text-gray-500">Email</dt>
+                <dd className="mt-1">
+                  <a
+                    href="mailto:info@greenworldgh.com"
+                    className="font-semibold text-lime-800 hover:text-lime-950"
+                  >
+                    info@greenworldgh.com
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt className="text-sm font-semibold text-gray-500">Phone</dt>
+                <dd className="mt-1">
+                  <a
+                    href="tel:+23324710076"
+                    className="font-semibold text-lime-800 hover:text-lime-950"
+                  >
+                    +233 247 100 76
+                  </a>
+                </dd>
+              </div>
+            </dl>
           </div>
           <ContactForm />
         </section>

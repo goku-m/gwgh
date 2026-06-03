@@ -1,10 +1,13 @@
 "use client";
 
 import { PointerEvent, useEffect, useRef, useState } from "react";
-import { regions } from "../data/regions";
+import { regionHasReportedActivity, regions } from "../data/regions";
 
 const MAP_WIDTH = 1077;
 const MAP_HEIGHT = 1460;
+const ACTIVE_COLOR = [101, 163, 13] as const;
+const INACTIVE_COLOR = [156, 163, 175] as const;
+
 function formatMetric(value: number, suffix = "") {
   const plus = value === 0 ? "" : "+";
   return `${value.toLocaleString("en-US")}${plus}${suffix}`;
@@ -12,7 +15,7 @@ function formatMetric(value: number, suffix = "") {
 
 type RegionLookup = {
   regionIndexByPixel: Int8Array;
-  imageData: ImageData;
+  cleanImageData: ImageData;
 };
 
 type Tooltip = {
@@ -23,7 +26,7 @@ type Tooltip = {
   flipY: boolean;
 };
 
-function buildLookup(mask: ImageData, cleanImage: ImageData): RegionLookup {
+function buildLookup(mask: ImageData, cleanImageData: ImageData): RegionLookup {
   const regionIndexByPixel = new Int8Array(mask.width * mask.height);
   regionIndexByPixel.fill(-1);
 
@@ -52,7 +55,7 @@ function buildLookup(mask: ImageData, cleanImage: ImageData): RegionLookup {
     regionIndexByPixel[index] = nearestRegion;
   }
 
-  return { regionIndexByPixel, imageData: cleanImage };
+  return { regionIndexByPixel, cleanImageData };
 }
 
 export default function InteractiveGhanaMap() {
@@ -70,18 +73,32 @@ export default function InteractiveGhanaMap() {
     const context = canvas.getContext("2d");
     if (!context) return;
 
-    context.putImageData(lookup.imageData, 0, 0);
-    if (regionIndex === null) return;
+    const overlay = new ImageData(
+      new Uint8ClampedArray(lookup.cleanImageData.data),
+      lookup.cleanImageData.width,
+      lookup.cleanImageData.height
+    );
 
-    const overlay = context.getImageData(0, 0, canvas.width, canvas.height);
     for (let index = 0; index < lookup.regionIndexByPixel.length; index += 1) {
-      if (lookup.regionIndexByPixel[index] === regionIndex) {
-        const offset = index * 4;
-        overlay.data[offset] = 101;
-        overlay.data[offset + 1] = 163;
-        overlay.data[offset + 2] = 13;
-        overlay.data[offset + 3] = 210;
-      }
+      const pixelRegionIndex = lookup.regionIndexByPixel[index];
+      if (pixelRegionIndex < 0) continue;
+
+      const region = regions[pixelRegionIndex];
+      const hasActivity = regionHasReportedActivity(region);
+      const color = hasActivity ? ACTIVE_COLOR : INACTIVE_COLOR;
+      const isHovered = pixelRegionIndex === regionIndex;
+      const strength = isHovered ? 0.62 : hasActivity ? 0.28 : 0.18;
+      const offset = index * 4;
+
+      overlay.data[offset] = Math.round(
+        overlay.data[offset] * (1 - strength) + color[0] * strength
+      );
+      overlay.data[offset + 1] = Math.round(
+        overlay.data[offset + 1] * (1 - strength) + color[1] * strength
+      );
+      overlay.data[offset + 2] = Math.round(
+        overlay.data[offset + 2] * (1 - strength) + color[2] * strength
+      );
     }
     context.putImageData(overlay, 0, 0);
   }
@@ -121,6 +138,7 @@ export default function InteractiveGhanaMap() {
         maskContext.getImageData(0, 0, MAP_WIDTH, MAP_HEIGHT),
         cleanImageData
       );
+      draw(null);
       setReady(true);
     }
 
@@ -186,6 +204,28 @@ export default function InteractiveGhanaMap() {
 
   return (
     <div>
+      <p className="mb-4 text-center text-sm text-gray-600">
+        Move your pointer over a region to highlight it and view its impact data.
+      </p>
+      <div
+        className="mb-5 flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs font-medium text-gray-600"
+        aria-label="Map legend"
+      >
+        <span className="inline-flex items-center gap-2">
+          <span
+            className="h-3 w-3 rounded-sm bg-lime-600"
+            aria-hidden="true"
+          />
+          Reported activity
+        </span>
+        <span className="inline-flex items-center gap-2">
+          <span
+            className="h-3 w-3 rounded-sm bg-gray-400"
+            aria-hidden="true"
+          />
+          No reported activity
+        </span>
+      </div>
       <div className="relative mx-auto w-full max-w-3xl">
         <canvas
           ref={canvasRef}
@@ -239,9 +279,6 @@ export default function InteractiveGhanaMap() {
           </div>
         )}
       </div>
-      <p className="mt-4 text-center text-sm text-gray-600">
-        Move your pointer over a region to highlight it and view its impact data.
-      </p>
     </div>
   );
 }

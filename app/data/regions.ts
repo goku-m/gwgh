@@ -8,8 +8,8 @@ export type Region = {
 };
 
 // Sample regional data for demonstration. Edit these values when verified
-// regional figures are available. Current totals: 150,000 trees, 200 acres,
-// and 50 communities.
+// regional figures are available. Public impact totals are calculated from
+// this dataset.
 export const regionalImpactDataset: Region[] = [
   { slug: "upper-west", name: "Upper West", color: [189, 188, 69], treesPlanted: 90000, cropsCultivated: 12, communitiesImpacted: 34 },
   { slug: "upper-east", name: "Upper East", color: [127, 127, 127], treesPlanted: 80000, cropsCultivated: 10, communitiesImpacted: 15 },
@@ -30,6 +30,14 @@ export const regionalImpactDataset: Region[] = [
 ];
 
 export const regions = regionalImpactDataset;
+
+export function regionHasReportedActivity(region: Region) {
+  return (
+    region.treesPlanted > 0 ||
+    region.cropsCultivated > 0 ||
+    region.communitiesImpacted > 0
+  );
+}
 
 export const regionalImpactTotals = regionalImpactDataset.reduce(
   (totals, region) => ({
